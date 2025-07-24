@@ -1,20 +1,21 @@
 import os
-import gdown
 import streamlit as st
 import numpy as np
 from PIL import Image
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing import image
+import requests
 
-# URL Google Drive (ubah ke direct link)
-file_id = '1waADn53Sa3aFKOfNSyKvCo9l8-Tn5CvF'
-output_model_path = 'model_cotton_leaf.h5'
-gdrive_url = f'https://drive.google.com/uc?id={file_id}'
+hf_url = "https://huggingface.co/aleisya01/cotton-leaf-diseases-and-pest-detection/resolve/main/model_cotton_leaf.h5"
+output_model_path = "model_cotton_leaf.h5"
 
 # Download model if not exists
 if not os.path.exists(output_model_path):
     with st.spinner('Downloading model...'):
-        gdown.download(gdrive_url, output_model_path, quiet=False)
+        r = requests.get(hf_url)
+        with open(output_model_path, 'wb') as f:
+            f.write(r.content)
+
 
 # Load trained model
 @st.cache_resource
